@@ -12,6 +12,11 @@ from .models import Category, Consumption, Product
 class CsvImportForm(forms.Form):
     csv_file = forms.FileField()
 
+class ConsumptionInLine(admin.StackedInline):
+    model = Consumption
+    extra = 1
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     change_list_template = 'admin_productos/product_changelist.html'
@@ -57,9 +62,10 @@ class ProductAdmin(admin.ModelAdmin):
     #list_filter = ('category')
     search_fields = ['category', 'name', 'code']
 
-class ConsumptionInLine(admin.StackedInline):
-    model = Consumption
-    extra = 1
+    inlines = [
+        ConsumptionInLine,
+    ]
+
 
 @admin.register(Category)
 class Category(admin.ModelAdmin):
