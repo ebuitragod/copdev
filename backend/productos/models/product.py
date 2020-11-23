@@ -13,3 +13,9 @@ class Product(models.Model):
 
     def __str__(self):
         return '({}): {} - {}'.format(self.name, self.category, self.name)
+
+    class Meta:
+        ordering = ['category', 'name', 'code']
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
+        

@@ -76,4 +76,5 @@ class Category(admin.ModelAdmin):
     #readonly_fields = ()
     #list_filter = ()
     search_fields = ['code', 'name']
+    
 
