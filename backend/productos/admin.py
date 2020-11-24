@@ -35,13 +35,13 @@ class ProductAdmin(admin.ModelAdmin):
             data_set = data_set.fillna(0) 
             data_set['code'] = data_set['code'].astype(str)
             data_set['name'] = data_set['name'].astype(str)
-            #data_set['category'] = data_set['category'].astype(str) #REVISSAR!
+            data_set['category'] = data_set['category'].astype(str) #REVISSAR!
 
         for index, row in data_set.iterrows():
             Product.objects.update_or_create(
                 code = row['code'],
                 name = row['name'],
-           #     category = row['category']
+                category = Category.objects.get(code = row['category'])
             )
         self.message_user(request, 'El seu csv ha estat importat.')
         return render(
@@ -90,7 +90,7 @@ class ConsumptionAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super().get_urls()
-        my_urls[
+        my_urls = [
             path('import-csv/', self.import_csv),
         ]
         return my_urls + urls
@@ -107,7 +107,7 @@ class ConsumptionAdmin(admin.ModelAdmin):
             for index, row in data_set.iterrows():
                 Consumption.objects.update_or_create(
                     timestamp = datetime.fromtimestamp(row['timestamp']),
-                    product = row['product'],
+                    product =  Product.objects.get(code = row['product']),
                     quantity = row['quantity']
                 )
             
