@@ -1,7 +1,7 @@
 import datetime
 
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 
 from rest_framework import viewsets, permissions, parsers, status
 from rest_framework.exceptions import NotFound as NotFoundError
@@ -11,10 +11,65 @@ from rest_framework.views import APIView
 
 from .models import Category
 from .serializers import CategorySerializer, InformacionCategorySerializer, PostCategorySerializer
+from .forms import CategoryForm
+
 from .models import Product
 from .serializers import ProductSerializer, InformacionProductSerializer, PostProductSerializer
+
 from .models import Consumption
 from .serializers import ConsumptionSerializer, InformacionConsumptionSerializer, PostConsumptionSerializer
+
+#CRUD
+def list_category_view(request):
+    context = {}
+    context['dataset'] = Category.objects.all()
+    return render(request, 'category/list_view.html', context)
+
+def detail_category_view(request, code):
+    context = {}
+    context['data'] = Category.objects.get(code=code)
+    return render(request, 'category/detail_view.html', context)
+
+
+def create_category_view(request):
+    #dictionary for initial data with fields as keys
+    context = {}
+    #add the dictionary durin initializations
+    form = CategoryForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+    context['form'] = form
+    return render(request, 'category/create_view.html', context)
+
+def update_category_view(request, code):
+    context = {}
+    #Fetch the object related to passed code (id)
+    obj = get_object_or_404(Category, code = code)
+    
+    #pass the object as instance in form
+    form = CategoryForm(request.POST or None, instance = obj)
+
+    # save the data from the form  and redirecct to detail_view
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('categoria/code='+code)
+    
+    #add form dictionary to context
+    context['form'] = form
+    
+    return render(request, 'category/update_view.html', context)
+
+def delete_category_view(request, code):
+    context = {}
+    obj = get_object_or_404(Category, code = code)
+    if request.method == 'POST':
+        #delete object
+        obj.delete()
+        #after deleting redirect to 
+        #homepage
+        return HttpResponseRedirect('categoria/lista')
+    return render(request, 'categoria/delete_view.html', context)
+
 
 #APIview
 class Categorias(APIView):
