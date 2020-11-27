@@ -8,7 +8,7 @@ from .category import Category
 
 class Product(models.Model):
     code = models.CharField('Código del producto', max_length=10, blank=True, null=True)
-    name = models.CharField('Nombre', max_length=100, unique=False)
+    name = models.CharField('Nombre', max_length=100)
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):

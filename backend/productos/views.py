@@ -33,8 +33,8 @@ class Categorias(APIView):
 class InformacionCategoria(APIView):
     permission_classes = (AllowAny,) #Cambiar por IsAuthenticated
 
-    def get(self, request, code):
-        categoria = CategorySerializer.objects.get(code=code)
+    def get(self, request, codigo_categoria):
+        categoria = Category.objects.get(code=codigo_categoria)
         serializer = InformacionCategorySerializer(categoria)
         return Response(serializer.data)
 
@@ -45,7 +45,7 @@ class Productos(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        serializer = PostSeProductSerializer(data=request.data)
+        serializer = PostProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -61,8 +61,8 @@ class InformacionProducto(APIView):
 
 class Consumiciones(APIView):
     def get(self, request):
-        consumicion = Consumption.objects
-        serializer = ConsumptionSerializer(categoria, many = True)
+        consumiciones = Consumption.objects
+        serializer = ConsumptionSerializer(consumiciones, many = True)
         return Response(serializer.data)
     
     def post(self, request):
