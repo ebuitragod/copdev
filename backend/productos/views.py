@@ -2,6 +2,7 @@ import datetime
 
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
+from django.urls import reverse
 
 from rest_framework import viewsets, permissions, parsers, status
 from rest_framework.exceptions import NotFound as NotFoundError
@@ -21,7 +22,8 @@ from .models import Consumption
 from .serializers import ConsumptionSerializer, InformacionConsumptionSerializer, PostConsumptionSerializer
 from .forms import ConsumptionForm
 
-#CRUD
+#==========CRUD
+#===Category
 def list_category_view(request):
     context = {}
     context['dataset'] = Category.objects.all()
@@ -53,25 +55,26 @@ def update_category_view(request, code):
     # save the data from the form  and redirecct to detail_view
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('categoria/code=' + code + '/')
+        return HttpResponseRedirect(reverse('category-code', args=(code,)))
     
     #add form dictionary to context
     context['form'] = form
     
     return render(request, 'category/update_view.html', context)
 
-def delete_category_view(request, code):
-    context = {}
-    obj = get_object_or_404(Category, code = code)
-    if request.method == 'POST':
-        #delete object
-        obj.delete()
-        #after deleting redirect to 
-        #homepage
-        return HttpResponseRedirect('category/lista/')
-    return render(request, 'category/delete_view.html', context)
+# def delete_category_view(request, code):
+#     context = {}
+#     obj = get_object_or_404(Category, code = code)
+#     if request.method == 'POST':
+#         #delete object
+#         obj.delete()
+#         #after deleting redirect to 
+#         #homepage
+#         return HttpResponseRedirect(reverse('category-list'))
+#     return render(request, 'category/delete_view.html', context)
+#===no debería poder eliminar categorías. 
 
-
+#===product
 def list_product_view(request):
     context = {}
     context['dataset'] = Product.objects.all()
@@ -103,7 +106,7 @@ def update_product_view(request, code):
     # save the data from the form  and redirecct to detail_view
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('producto/code=' + code + '/')
+        return HttpResponseRedirect(reverse('product-code', args=(code,)))
     
     #add form dictionary to context
     context['form'] = form
@@ -118,10 +121,10 @@ def delete_product_view(request, code):
         obj.delete()
         #after deleting redirect to 
         #homepage
-        return HttpResponseRedirect('producto/lista/')
+        return HttpResponseRedirect(reverse('product-list'))
     return render(request, 'product/delete_view.html', context)
 
-
+#===consumption
 def list_consumption_view(request):
     context = {}
     context['dataset'] = Consumption.objects.all()
@@ -153,7 +156,7 @@ def update_consumption_view(request, timestamp):
     # save the data from the form  and redirecct to detail_view
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('consumision/timestamp=' + timestamp + '/')
+        return HttpResponseRedirect(reverse('consumption-timestamp', args=(timestamp,)))
     
     #add form dictionary to context
     context['form'] = form
@@ -168,16 +171,15 @@ def delete_consumption_view(request, timestamp):
         obj.delete()
         #after deleting redirect to 
         #homepage
-        return HttpResponseRedirect('categoria/lista/')
+        return HttpResponseRedirect(reverse('consumption-list'))
     return render(request, 'categoria/delete_view.html', context)
-
-
-#timestamp
+#==========.==========
 
 
 
 
-#APIview
+#==========APIview==========
+#===Category
 class Categorias(APIView):
     def get(self, request):
         categoria = Category.objects
@@ -199,6 +201,7 @@ class InformacionCategoria(APIView):
         serializer = InformacionCategorySerializer(categoria)
         return Response(serializer.data)
 
+#===Product
 class Productos(APIView):
     def get(self, request):
         producto = Product.objects
@@ -220,6 +223,7 @@ class InformacionProducto(APIView):
         serializer = InformacionProductSerializer(categoria)
         return Response(serializer.data)
 
+#===Consumption
 class Consumiciones(APIView):
     def get(self, request):
         consumiciones = Consumption.objects

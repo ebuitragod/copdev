@@ -4,7 +4,7 @@ from rest_framework.authtoken import views as authviews
 from django.urls import include, path
 
 from .views import Categorias, InformacionCategoria
-from .views import list_category_view, detail_category_view, create_category_view, update_category_view, delete_category_view
+from .views import list_category_view, detail_category_view, create_category_view, update_category_view#, delete_category_view
 
 from .views import Productos, InformacionProducto
 from .views import list_product_view, detail_product_view, create_product_view, update_product_view, delete_product_view
@@ -24,21 +24,21 @@ urlpatterns = [
 
     #==========for CRUD==========
     #===Category
-    path('categoria/lista/', list_category_view),
+    path('categoria/lista/', list_category_view, name = 'category-list'),
     path('categoria/crear/', create_category_view),
-    path('categoria/code=<str:code>/', detail_category_view),
+    path('categoria/code=<str:code>/', detail_category_view, name = 'category-code'),
     path('categoria/code=<str:code>/editar/', update_category_view),
-    path('categoria/code=<str:code>/eliminar/', delete_category_view), #Arreglar
+    #path('categoria/code=<str:code>/eliminar/', delete_category_view), #no debería poder eliminar categorías
     #===Product
-    path('producto/lista/', list_product_view),
+    path('producto/lista/', list_product_view, name = 'product-list'),
     path('producto/crear/', create_product_view),
-    path('producto/code=<str:code>/', detail_product_view),
+    path('producto/code=<str:code>/', detail_product_view, name = 'product-code'),
     path('producto/code=<str:code>/editar/', update_product_view),
     path('producto/code=<str:code>/eliminar/', delete_product_view),
     #===Consumption
-    path('consumicion/lista/', list_consumption_view),
+    path('consumicion/lista/', list_consumption_view, name = 'consumption-list'),
     path('consumicion/crear/', create_consumption_view),
-    path('consumicion/timestamp=<str:timestamp>/', detail_consumption_view),
+    path('consumicion/timestamp=<str:timestamp>/', detail_consumption_view, name = 'consumption-timestamp'),
     path('consumicion/timestamp=<str:timestamp>/editar/', update_consumption_view),
     path('consumicion/timestamp=<str:timestamp>/eliminar/', delete_consumption_view), 
 ]

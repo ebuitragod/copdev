@@ -4,7 +4,7 @@ import pandas as pd
 from django.test import TestCase
 from django.utils import timezone
 
-from .models import Product, Category, Consumption
+from productos.models import Product, Category, Consumption
 
 class ProductTestCase(TestCase):
     """
