@@ -3,8 +3,10 @@ import pandas as pd
 
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.encoding import force_text
 
 from productos.models import Product, Category, Consumption
+from productos.forms import ProductForm, CategoryForm, ConsumptionForm
 
 class ProductTestCase(TestCase):
     """
@@ -28,6 +30,31 @@ class ProductTestCase(TestCase):
     def test_products_save(self):
         productos = Product.objects.all()
         self.assertEqual(len(productos), 1)
+    #Anadiendo tests
+    def create_product(self, name = 'Holitas', code = 'LL0005', category = Category.objects.get(code='LL')):
+        return Product.objects.create(name = name, code = code)
+
+    def test_product_creation(self):
+        p = self.create_product()
+        self.assertTrue(isinstance(p, Product))
+
+    def test_valid_form(self):
+        p = Product.objects.create(name='Prueba_form', code = 'TVF', category = Category.objects.get(code = 'LL'))
+        data = {'code': p.code,
+                'name': p.name,
+                'category': p.category,
+                }
+        form = ProductForm(data=data)
+        self.assertTrue(form.is_valid)
+
+    def test_get_api_json(self):
+        response = self.client.get('/api/categorias/', format='json')
+        #self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            force_text(response.content),
+            [{'code': 'LL', 'name': 'Landline'}, {'code': 'MO', 'name': 'Mobile'}]
+        )
+
 
 class CategoryTestCase(TestCase):
     """
