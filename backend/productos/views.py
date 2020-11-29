@@ -15,9 +15,11 @@ from .forms import CategoryForm
 
 from .models import Product
 from .serializers import ProductSerializer, InformacionProductSerializer, PostProductSerializer
+from .forms import ProductForm
 
 from .models import Consumption
 from .serializers import ConsumptionSerializer, InformacionConsumptionSerializer, PostConsumptionSerializer
+from .forms import ConsumptionForm
 
 #CRUD
 def list_category_view(request):
@@ -29,7 +31,6 @@ def detail_category_view(request, code):
     context = {}
     context['data'] = Category.objects.get(code=code)
     return render(request, 'category/detail_view.html', context)
-
 
 def create_category_view(request):
     #dictionary for initial data with fields as keys
@@ -52,7 +53,7 @@ def update_category_view(request, code):
     # save the data from the form  and redirecct to detail_view
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('categoria/code='+code)
+        return HttpResponseRedirect('categoria/code=' + code + '/')
     
     #add form dictionary to context
     context['form'] = form
@@ -67,8 +68,113 @@ def delete_category_view(request, code):
         obj.delete()
         #after deleting redirect to 
         #homepage
-        return HttpResponseRedirect('categoria/lista')
+        return HttpResponseRedirect('category/lista/')
+    return render(request, 'category/delete_view.html', context)
+
+
+def list_product_view(request):
+    context = {}
+    context['dataset'] = Product.objects.all()
+    return render(request, 'product/list_view.html', context)
+
+def detail_product_view(request, code):
+    context = {}
+    context['data'] = Product.objects.get(code=code)
+    return render(request, 'product/detail_view.html', context)
+
+def create_product_view(request):
+    #dictionary for initial data with fields as keys
+    context = {}
+    #add the dictionary durin initializations
+    form = ProductForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+    context['form'] = form
+    return render(request, 'product/create_view.html', context)
+
+def update_product_view(request, code):
+    context = {}
+    #Fetch the object related to passed code (id)
+    obj = get_object_or_404(Product, code = code)
+    
+    #pass the object as instance in form
+    form = ProductForm(request.POST or None, instance = obj)
+
+    # save the data from the form  and redirecct to detail_view
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('producto/code=' + code + '/')
+    
+    #add form dictionary to context
+    context['form'] = form
+    
+    return render(request, 'product/update_view.html', context)
+
+def delete_product_view(request, code):
+    context = {}
+    obj = get_object_or_404(Product, code = code)
+    if request.method == 'POST':
+        #delete object
+        obj.delete()
+        #after deleting redirect to 
+        #homepage
+        return HttpResponseRedirect('producto/lista/')
+    return render(request, 'product/delete_view.html', context)
+
+
+def list_consumption_view(request):
+    context = {}
+    context['dataset'] = Consumption.objects.all()
+    return render(request, 'consumption/list_view.html', context)
+
+def detail_consumption_view(request, code):
+    context = {}
+    context['data'] = Consumption.objects.get(code=code)
+    return render(request, 'consumption/detail_view.html', context)
+
+def create_consumption_view(request):
+    #dictionary for initial data with fields as keys
+    context = {}
+    #add the dictionary durin initializations
+    form = ConsumptionForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+    context['form'] = form
+    return render(request, 'consumption/create_view.html', context)
+
+def update_consumption_view(request, timestamp):
+    context = {}
+    #Fetch the object related to passed timestamp (id)
+    obj = get_object_or_404(Consumption, timestamp = timestamp)
+    
+    #pass the object as instance in form
+    form = ConsumptionForm(request.POST or None, instance = obj)
+
+    # save the data from the form  and redirecct to detail_view
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect('consumision/timestamp=' + timestamp + '/')
+    
+    #add form dictionary to context
+    context['form'] = form
+    
+    return render(request, 'consumption/update_view.html', context)
+
+def delete_consumption_view(request, timestamp):
+    context = {}
+    obj = get_object_or_404(consumption, timestamp = timestamp)
+    if request.method == 'POST':
+        #delete object
+        obj.delete()
+        #after deleting redirect to 
+        #homepage
+        return HttpResponseRedirect('categoria/lista/')
     return render(request, 'categoria/delete_view.html', context)
+
+
+#timestamp
+
+
 
 
 #APIview

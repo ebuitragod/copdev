@@ -8,3 +8,21 @@ class CategoryForm(forms.ModelForm):
             'code',
             'name',
         ]
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            'code',
+            'name',
+            'category',
+        ]
+
+class ConsumptionForm(forms.ModelForm):
+    class Meta:
+        model = Consumption
+        fields = [
+            'timestamp',
+            'product',
+            'quantity',
+        ]
