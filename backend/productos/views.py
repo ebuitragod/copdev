@@ -42,7 +42,7 @@ def create_category_view(request):
     if form.is_valid():
         form.save()
     context['form'] = form
-    return render(request, 'category/create_view.html', context)
+    return render(request, 'category/list_view.html', context)
 
 def update_category_view(request, code):
     context = {}
@@ -201,7 +201,6 @@ class InformacionCategoria(APIView):
         serializer = InformacionCategorySerializer(categoria)
         return Response(serializer.data)
 
-#===Product
 class Productos(APIView):
     def get(self, request):
         producto = Product.objects
@@ -223,7 +222,6 @@ class InformacionProducto(APIView):
         serializer = InformacionProductSerializer(categoria)
         return Response(serializer.data)
 
-#===Consumption
 class Consumiciones(APIView):
     def get(self, request):
         consumiciones = Consumption.objects
