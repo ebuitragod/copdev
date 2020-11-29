@@ -38,23 +38,6 @@ class ProductTestCase(TestCase):
         p = self.create_product()
         self.assertTrue(isinstance(p, Product))
 
-    def test_valid_form(self):
-        p = Product.objects.create(name='Prueba_form', code = 'TVF', category = Category.objects.get(code = 'LL'))
-        data = {'code': p.code,
-                'name': p.name,
-                'category': p.category,
-                }
-        form = ProductForm(data=data)
-        self.assertTrue(form.is_valid)
-
-    def test_get_api_json(self):
-        response = self.client.get('/api/productos/', format='json')
-        #self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(
-            force_text(response.content),
-            [{'code': 'LL01', 'name': 'ADSL', 'category': 1}]
-        )
-
 
 class CategoryTestCase(TestCase):
     """
@@ -80,23 +63,6 @@ class CategoryTestCase(TestCase):
     def test_product_creation(self):
         c = self.create_category()
         self.assertTrue(isinstance(c, Category))
-
-    def test_valid_form(self):
-        c = Category.objects.create(name='Category_form', code = 'TVF')
-        data = {'code': c.code,
-                'name': c.name,
-                }
-        form = ProductForm(data=data)
-        self.assertTrue(form.is_valid)
-
-    def test_get_api_json(self):
-        response = self.client.get('/api/categorias/', format='json')
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(
-            force_text(response.content),
-            [{'code': 'LL', 'name': 'Landline'}, {'code': 'MO', 'name': 'Mobile'}]
-        )
-
 
 class ConsumptionTestCase(TestCase):
     def setUp(self):
