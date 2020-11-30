@@ -22,7 +22,7 @@ No necesita estar autenticado. Esta opción se puede cambiar.
         '/api/informacion_consumiciones/code=<str:code>/'
         
         
-###C RUD
+### CRUD
 
 No necesita estar autenticado. 
 
